@@ -23,8 +23,8 @@ const ProductScreen = ({ history, match }) => {
 	useEffect(() => {
 		dispatch(listProductDetails(id));
 	}, [dispatch, id]);
-	const addToCardHandler = () => {
-		history.push(`/card/${match.params.id}?qty=${qty}`);
+	const addToCartHandler = () => {
+		history.push(`/cart/${match.params.id}?qty=${qty}`);
 	};
 	return (
 		<>
@@ -101,9 +101,9 @@ const ProductScreen = ({ history, match }) => {
 										disabled={product.countInStock === 0}
 										className='btn-block'
 										type='button'
-										onClick={addToCardHandler}
+										onClick={addToCartHandler}
 									>
-										Add To Card
+										Add To Cart
 									</Button>
 								</ListGroup.Item>
 							</ListGroup>
