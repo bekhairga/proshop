@@ -1,12 +1,21 @@
-main{
-    min-height: 80vh;
+main {
+	min-height: 80vh;
 }
-h3{
-    padding: 1rem;
+h1 {
+	font-size: 1.8rem;
+	padding: 1rem;
 }
-.rating{
-    white-space: nowrap;
+h2 {
+	font-size: 1.4rem;
+	padding: 0.5rem;
 }
-.rating span{
-    margin: 0.1rem;
+h3 {
+	padding: 1rem;
+}
+
+.rating {
+	white-space: nowrap;
+}
+.rating span {
+	margin: 0.1rem;
 }
