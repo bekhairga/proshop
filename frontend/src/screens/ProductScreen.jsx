@@ -12,6 +12,7 @@ import {
 import Rating from '../components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProductDetails } from './../actions/productActions';
+import { addToCart } from '../actions/cartActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 const ProductScreen = ({ history, match }) => {
@@ -24,7 +25,8 @@ const ProductScreen = ({ history, match }) => {
 		dispatch(listProductDetails(id));
 	}, [dispatch, id]);
 	const addToCartHandler = () => {
-		history.push(`/cart/${match.params.id}?qty=${qty}`);
+		dispatch(addToCart(match.params.id, qty));
+		history.push(`/cart`);
 	};
 	return (
 		<>

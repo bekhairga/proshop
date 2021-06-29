@@ -11,20 +11,17 @@ import {
 	ListGroup,
 	Card,
 } from 'react-bootstrap';
-import { addToCart } from '../actions/cartActions';
+import { addToCart, removeFromCart } from '../actions/cartActions';
 
 const CartScreen = ({ match, location, history }) => {
-	const productId = match.params.id;
-	const qty = location.search ? Number(location.search.split('=')[1]) : 1;
 	const dispatch = useDispatch();
 	const cart = useSelector((state) => state.cart);
 	const { cartItems } = cart;
-	useEffect(() => {
-		if (productId) {
-			dispatch(addToCart(productId, qty));
-		}
-	}, [dispatch, productId, qty]);
-	const removeCartHandler = (e) => {};
+	const removeCartHandler = (item) => {
+		dispatch(removeFromCart(item));
+		history.push('/cart');
+	};
+
 	const checkoutHandler = () => {
 		history.push('/login?redirect=shipping');
 	};
@@ -50,11 +47,12 @@ const CartScreen = ({ match, location, history }) => {
 									<Col md={2}>{item.price}</Col>
 									<Col md={2}>
 										<Form.Control
-											onChange={(e) =>
+											onChange={(e) => {
+												console.log(e.target.value);
 												dispatch(
 													addToCart(item.product, Number(e.target.value))
-												)
-											}
+												);
+											}}
 											as='select'
 											value={item.quantity}
 										>
@@ -69,9 +67,9 @@ const CartScreen = ({ match, location, history }) => {
 										<Button
 											type='button'
 											variant='light'
-											onClick={(e) => removeCartHandler(e)}
+											onClick={() => removeCartHandler(item.product)}
 										>
-											<i className='fas fa-trash'></i>
+											<i className='fas fa-trash' />
 										</Button>
 									</Col>
 								</Row>
