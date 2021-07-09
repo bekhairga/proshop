@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Row, Col, ListGroup, Image, Card, Button} from 'react-bootstrap';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Message from '../components/Message';
 import {Link} from 'react-router-dom';
 import CheckoutSteps from '../components/CheckoutSteps';
+import {createOrder} from "../actions/orderActions";
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({history}) => {
+    const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart);
     //handy function to make any number decimal consisting of only 2 symbols
     const addDecimals = (num) => {
@@ -17,7 +19,25 @@ const PlaceOrderScreen = () => {
 
     cart.totalPrice = addDecimals(Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice));
 
+    const orderCreate = useSelector(state=> state.orderCreate)
+
+    const {order, success, error} = orderCreate;
+    useEffect(()=>{
+        if(success){
+            history.push(`/order/${order._id}`);
+        }
+    },[history, success])
     const placeOrderHandler = () => {
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: cart.shippingPrice,
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice,
+
+        }));
     };
     return (
         <>
@@ -102,6 +122,9 @@ const PlaceOrderScreen = () => {
                                     <Col>Total</Col>
                                     <Col>${cart.totalPrice}</Col>
                                 </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                {error && <Message variant='danger'>{error}</Message>}
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Button
