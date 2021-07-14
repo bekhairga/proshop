@@ -13,9 +13,12 @@ import {
 	USER_UPDATE_PROFILE_SUCCESS,
 	USER_UPDATE_PROFILE_REQUEST,
 	USER_DETAILS_RESET,
+	USER_LIST_REQUEST,
+	USER_LIST_FAILURE,
 } from '../constants/userConstants';
 import axios from 'axios';
 import { ORDER_MY_LIST_RESET } from '../constants/orderConstants';
+import { USER_LIST_SUCCESS } from './../constants/userConstants';
 export const login = (email, password) => async (dispatch) => {
 	try {
 		dispatch({
@@ -141,6 +144,35 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: USER_UPDATE_PROFILE_FAILURE,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const listUsers = () => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: USER_LIST_REQUEST,
+		});
+		const {
+			userLogin: { userInfo },
+		} = getState();
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+		const { data } = await axios.get(`/api/users`, config);
+		dispatch({
+			type: USER_LIST_SUCCESS,
+			payload: data,
+		});
+	} catch (err) {
+		dispatch({
+			type: USER_LIST_FAILURE,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message
